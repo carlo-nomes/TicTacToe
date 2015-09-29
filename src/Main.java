@@ -5,6 +5,8 @@ import java.util.Scanner;
  */
 public class Main {
     public static void main(String[] args) {
+        System.out.println(new Board());
+
         String keuze;
         do{
             Board b = new Board();

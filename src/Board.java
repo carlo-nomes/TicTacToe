@@ -4,42 +4,39 @@ import java.util.Scanner;
  * Created by Nicolas on 22-9-2015.
  */
 public class Board {
-    private char positie[];
-    private Player speler;
+    private char[][] board;
+    private Player currentPlayer;
 
     public Board() {
-        positie = new char[]{'0', '1', '2', '3', '4', '5', '6', '7', '8', '9' };
-        speler = new Player("x");
-    }
-
-    public String currentBoard() {
-        System.out.println("\t\t" + positie[1] + " |" + positie[2] + " |" + positie[3]);
-        System.out.println("\t\t__|__|__");
-        System.out.println("\t\t" + positie[4] + " |" + positie[5] + " |" + positie[6]);
-        System.out.println("\t\t__|__|__");
-        System.out.println("\t\t" + positie[7] + " |" + positie[8] + " |" + positie[9]);
-        System.out.println("\t\t  |  |");
-        return "currentboard";
+        board = new char[3][3];
+        for (int y = 0; y < board.length; y++) {
+            for (int x = 0; x < board[y].length; x++) {
+                board[y][x] = Character.forDigit((y *board.length) + x, 10);
+            }
+        }
+        currentPlayer = new Player("x");
     }
 
     public void play() {
         int keuze;
-        System.out.println("Speler 'X' zal eerst gaan daarna mag speler 'O'");
+        System.out.println("Speler 'X' zal eerst gaan daarna mag currentPlayer 'O'");
 
-        try{do {
-            currentBoard();
-            System.out.println("Speler '" + getPlayer() + "' kies een positie");
-            boolean positieGenomen = true;
-            while (positieGenomen) {
-                Scanner sc = new Scanner(System.in);
-                keuze = sc.nextInt();
-                positieGenomen = checkPositie(keuze);
-                if (positieGenomen == false) {
-                    positie[keuze] = getPlayer().charAt(0);
+        try {
+            do {
+                currentBoard();
+                System.out.println("Speler '" + getPlayer() + "' kies een positie");
+                boolean positieGenomen = true;
+                while (positieGenomen) {
+                    Scanner sc = new Scanner(System.in);
+                    keuze = sc.nextInt();
+                    positieGenomen = checkPositie(keuze);
+                    if (positieGenomen == false) {
+                        positie[keuze] = getPlayer().charAt(0);
+                    }
                 }
-            }
-            nextPlayer();
-        } while (checkWinner().equalsIgnoreCase(""));}catch (ArrayIndexOutOfBoundsException aiob){
+                nextPlayer();
+            } while (checkWinner().equalsIgnoreCase(""));
+        } catch (ArrayIndexOutOfBoundsException aiob) {
             System.err.println("De keuze past niet in dit bord.");
         }
 
@@ -119,23 +116,37 @@ public class Board {
     }
 
     public boolean checkPositie(int spot) {
-        if (positie[spot] == 'x' || positie[spot] == 'o'||spot>9) {
+        if (positie[spot] == 'x' || positie[spot] == 'o' || spot > 9) {
             System.out.println("Deze positie is al gebruikt, gelieve een andere te kiezen.");
             return true;
-        }
-        else {
+        } else {
             return false;
         }
     }
 
     public String getPlayer() {
-        return speler.getNaam();
+        return currentPlayer.getNaam();
     }
 
     public void nextPlayer() {
         if (getPlayer().equalsIgnoreCase("x")) {
-            speler.setNaam("o");
-        } else speler.setNaam("x");
+            currentPlayer.setNaam("o");
+        } else currentPlayer.setNaam("x");
     }
 
+    @Override
+    public String toString() {
+        StringBuilder boardStringBuilder = new StringBuilder();
+        for (int y = 0; y < board.length; y++) {
+            for (int x = 0; x < board[y].length; x++) {
+                boardStringBuilder.append(" ");
+                boardStringBuilder.append(board[y][x]);
+                if (x != 2)
+                    boardStringBuilder.append(" |");
+            }
+            if (y != 2)
+                boardStringBuilder.append("\n---|---|---\n");
+        }
+        return boardStringBuilder.toString();
+    }
 }
