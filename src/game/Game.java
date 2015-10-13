@@ -25,6 +25,15 @@ public class Game {
         currentPlayer = player1;
     }
 
+    public Game(Game other) {
+        this.player1 = other.getPlayer1();
+        this.player2 = other.getPlayer2();
+        this.board = new Board(other.getBoard());
+        this.currentPlayer = other.getCurrentPlayer();
+        this.gameState = other.getGameState();
+        this.winner = other.getWinner();
+    }
+
     private void checkWin() {
         char[][] boardArray = board.getBoardArray();
 
@@ -75,6 +84,14 @@ public class Game {
 
     }
 
+    public Player getPlayer1() {
+        return player1;
+    }
+
+    public Player getPlayer2() {
+        return player2;
+    }
+
     public GAME_STATES getGameState() {
         return gameState;
     }
@@ -85,6 +102,26 @@ public class Game {
 
     public Board getBoard() {
         return board;
+    }
+
+    public Player getCurrentPlayer() {
+        return currentPlayer;
+    }
+
+    public void setBoard(Board board) {
+        this.board = board;
+    }
+
+    public void setCurrentPlayer(Player currentPlayer) {
+        this.currentPlayer = currentPlayer;
+    }
+
+    public void setGameState(GAME_STATES gameState) {
+        this.gameState = gameState;
+    }
+
+    public void setWinner(Player winner) {
+        this.winner = winner;
     }
 
     public void makeMove(int pos) throws GameException {

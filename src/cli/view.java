@@ -3,6 +3,7 @@ package cli;
 import game.Game;
 import game.Player;
 import game.GameException;
+import minimax.AI;
 
 import java.util.Scanner;
 
@@ -11,6 +12,8 @@ import java.util.Scanner;
  */
 public class view {
     public static void main(String[] args) {
+        AI ai = new AI();
+
         boolean cont = true;
         Scanner scanner = new Scanner(System.in);
         while (cont) {
@@ -20,8 +23,14 @@ public class view {
             do {
                 System.out.println("\n\n" + game.toString());
                 try {
-                    int pos = Integer.parseInt(scanner.next());
-                    game.makeMove(pos);
+                    if (game.getCurrentPlayer() == playerX) {
+                        int move = ai.makeMove(game, playerX);
+                        System.out.println("ai: " + move);
+                        game.makeMove(move);
+                    } else {
+                        int pos = Integer.parseInt(scanner.next());
+                        game.makeMove(pos);
+                    }
                 } catch (GameException e) {
                     System.out.println(e.getMessage());
                     scanner.nextLine();

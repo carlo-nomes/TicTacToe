@@ -10,6 +10,17 @@ public class Board {
         boardArray = new char[3][3];
     }
 
+    public Board(Board other) {
+        char[][] oldArray = other.getBoardArray();
+
+        boardArray = new char[3][3];
+        for (int y = 0; y < oldArray.length; y++) {
+            for (int x = 0; x < oldArray[y].length; x++) {
+                boardArray[x][y] = oldArray[x][y];
+            }
+        }
+    }
+
     public boolean isFree(int pos) {
         int y = pos / boardArray.length;
         int x = pos % boardArray.length;
@@ -31,6 +42,10 @@ public class Board {
         return boardArray;
     }
 
+    public void setBoardArray(char[][] boardArray) {
+        this.boardArray = boardArray;
+    }
+
     @Override
     public String toString() {
         StringBuilder boardStringBuilder = new StringBuilder();
@@ -47,5 +62,9 @@ public class Board {
         return boardStringBuilder.toString();
     }
 
-
+    public Board clone() {
+        Board board = new Board();
+        board.setBoardArray(this.getBoardArray());
+        return board;
+    }
 }
