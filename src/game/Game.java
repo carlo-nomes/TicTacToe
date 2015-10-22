@@ -7,15 +7,18 @@ public class Game {
     public enum GAME_STATES {NORMAL, WON, TIE}
 
 
-    private final Player player1;
-    private final Player player2;
+    private final char player1;
+    private final char player2;
     private Board board;
-    private Player currentPlayer;
+    private char currentPlayer;
 
     private GAME_STATES gameState;
-    private Player winner;
+    private char winner;
 
-    public Game(Player player1, Player player2) {
+    public Game(char player1, char player2) throws GameException {
+        if (player1 == player2)
+            throw new GameException("Players cannot have the same char");
+
         this.player1 = player1;
         this.player2 = player2;
 
@@ -25,15 +28,6 @@ public class Game {
         currentPlayer = player1;
     }
 
-    public Game(Game other) {
-        this.player1 = other.getPlayer1();
-        this.player2 = other.getPlayer2();
-        this.board = new Board(other.getBoard());
-        this.currentPlayer = other.getCurrentPlayer();
-        this.gameState = other.getGameState();
-        this.winner = other.getWinner();
-    }
-
     private void checkWin() {
         char[][] boardArray = board.getBoardArray();
 
@@ -41,7 +35,7 @@ public class Game {
         for (int y = 0; y < boardArray.length; y++) {
             if (boardArray[y][0] != '\u0000' && boardArray[y][0] == boardArray[y][1] && boardArray[y][1] == boardArray[y][2]) {
                 gameState = GAME_STATES.WON;
-                winner = boardArray[y][0] == player1.getName() ? player1 : player2;
+                winner = boardArray[y][0] == player1 ? player1 : player2;
                 return;
             }
         }
@@ -50,7 +44,7 @@ public class Game {
         for (int x = 0; x < boardArray[0].length; x++) {
             if (boardArray[0][x] != '\u0000' && boardArray[0][x] == boardArray[1][x] && boardArray[1][x] == boardArray[2][x]) {
                 gameState = GAME_STATES.WON;
-                winner = boardArray[0][x] == player1.getName() ? player1 : player2;
+                winner = boardArray[0][x] == player1 ? player1 : player2;
                 return;
             }
         }
@@ -58,14 +52,14 @@ public class Game {
         //Check diagonal left->right
         if (boardArray[0][0] != '\u0000' && boardArray[0][0] == boardArray[1][1] && boardArray[1][1] == boardArray[2][2]) {
             gameState = GAME_STATES.WON;
-            winner = boardArray[0][0] == player1.getName() ? player1 : player2;
+            winner = boardArray[0][0] == player1 ? player1 : player2;
             return;
         }
 
         //Check diagonal right->left
         if (boardArray[0][2] != '\u0000' && boardArray[0][2] == boardArray[1][1] && boardArray[1][1] == boardArray[2][0]) {
             gameState = GAME_STATES.WON;
-            winner = boardArray[0][2] == player1.getName() ? player1 : player2;
+            winner = boardArray[0][2] == player1 ? player1 : player2;
             return;
         }
 
@@ -84,11 +78,11 @@ public class Game {
 
     }
 
-    public Player getPlayer1() {
+    public char getPlayer1() {
         return player1;
     }
 
-    public Player getPlayer2() {
+    public char getPlayer2() {
         return player2;
     }
 
@@ -96,7 +90,7 @@ public class Game {
         return gameState;
     }
 
-    public Player getWinner() {
+    public char getWinner() {
         return winner;
     }
 
@@ -104,35 +98,24 @@ public class Game {
         return board;
     }
 
-    public Player getCurrentPlayer() {
+    public char getCurrentPlayer() {
         return currentPlayer;
     }
 
-    public void setBoard(Board board) {
-        this.board = board;
-    }
-
-    public void setCurrentPlayer(Player currentPlayer) {
-        this.currentPlayer = currentPlayer;
-    }
-
-    public void setGameState(GAME_STATES gameState) {
-        this.gameState = gameState;
-    }
-
-    public void setWinner(Player winner) {
-        this.winner = winner;
-    }
-
     public void makeMove(int pos) throws GameException {
-        if (pos > 8 || pos < 0) {
+        if (pos >= board.getBoardSize() || pos < 0) {
             throw new GameException("The selected position is not within the board");
         } else if (!board.isFree(pos)) {
             throw new GameException("The selected position is taken.");
         } else {
             board.setPlayer(pos, currentPlayer);
-            checkWin();
-            currentPlayer = currentPlayer.equals(player1) ? player2 : player1;
+            try {
+                winner = WinChecker.FIND_WINNER(board);
+                if (winner == '\u0000') gameState = GAME_STATES.TIE;
+                else gameState = GAME_STATES.WON;
+            } catch (NoWinnerException e) {
+                currentPlayer = currentPlayer == player1 ? player2 : player1;
+            }
         }
     }
 
