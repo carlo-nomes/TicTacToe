@@ -10,7 +10,7 @@ import java.util.Scanner;
  * Created by Carlo on 13/10/2015.
  */
 public class view {
-    private static final char AIPLAYER = 'O';
+    private static final char AIPLAYER = 'X';
 
     public static void main(String[] args) {
         char playerX = 'X';
