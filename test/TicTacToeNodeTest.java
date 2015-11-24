@@ -8,7 +8,7 @@ public class TicTacToeNodeTest {
     public static void main(String[] args) {
         Board board = new Board();
         //TicTacToeNode ticTacToeNode = new TicTacToeNode(board, 'X', 'O');
-        TicTacToeNode ticTacToeNode = new TicTacToeNode(TicTacToeNode.State.MAX, board, 'O', 'X');
+        TicTacToeNode ticTacToeNode = new TicTacToeNode(board, 'O', 'X');
 
         System.out.println(ticTacToeNode);
         ticTacToeNode.getBoard().setPlayer(0, 'X');

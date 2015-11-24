@@ -10,14 +10,6 @@ import javax.swing.tree.DefaultMutableTreeNode;
  * Created by Carlo on 23/10/2015.
  */
 public class TicTacToeNode extends DefaultMutableTreeNode {
-    public State getState() {
-        return state;
-    }
-
-    public enum State {
-        MIN, MAX
-    }
-
     private final static int[][][] winStates = {{
             {1, 0, 0},
             {0, 1, 0},
@@ -56,11 +48,9 @@ public class TicTacToeNode extends DefaultMutableTreeNode {
     private Board board;
     private char currentPlayer;
     private char otherPlayer;
-    private State state;
 
-    public TicTacToeNode(State state, Board board, char currentPlayer, char otherPlayer) {
+    public TicTacToeNode(Board board, char currentPlayer, char otherPlayer) {
         super();
-        this.state = state;
         this.board = board.clone();
         this.currentPlayer = currentPlayer;
         this.otherPlayer = otherPlayer;
@@ -95,7 +85,7 @@ public class TicTacToeNode extends DefaultMutableTreeNode {
             }
             score = (maxScore + minScore);
         }
-        return state == State.MAX ? score : -score;
+        return score;
     }
 
     public void setScore(double score) {
@@ -120,8 +110,6 @@ public class TicTacToeNode extends DefaultMutableTreeNode {
 
     @Override
     public String toString() {
-        return getBoard()
-                + "\nstate: " + getState()
-                + "\nscore: " + getScore();
+        return getBoard() + "\nscore: " + getScore();
     }
 }

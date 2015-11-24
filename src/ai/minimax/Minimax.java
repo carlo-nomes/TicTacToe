@@ -2,7 +2,6 @@ package ai.minimax;
 
 import ai.AI;
 import game.Board;
-import ai.minimax.TicTacToeNode.State;
 
 import java.util.Enumeration;
 
@@ -11,7 +10,7 @@ import java.util.Enumeration;
  */
 public class Minimax implements AI {
     private final static String NAME = "Minimax";
-    private static final int DEPTH = 1;
+    private static final int MINIMAX_TREE_DEPTH = 1;
 
     private final char aiPlayer;
     private final char opponent;
@@ -27,7 +26,7 @@ public class Minimax implements AI {
 
     @Override
     public int move(Board board) {
-        TicTacToeNode node = makeTree(new TicTacToeNode(TicTacToeNode.State.MIN, board, aiPlayer, opponent), DEPTH);
+        TicTacToeNode node = makeTree(new TicTacToeNode(board, aiPlayer, opponent), MINIMAX_TREE_DEPTH);
 
         int bestScore = 0;
         TicTacToeNode bestNode = null;
@@ -80,7 +79,7 @@ public class Minimax implements AI {
 
         for (int pos = 0; pos < rootBoard.getBoardSize(); pos++) {
             if (rootBoard.isFree(pos)) {
-                TicTacToeNode newNode = new TicTacToeNode(root.getState() == TicTacToeNode.State.MAX ? TicTacToeNode.State.MIN : TicTacToeNode.State.MAX, rootBoard, root.getCurrentPlayer(), root.getOtherPlayer());
+                TicTacToeNode newNode = new TicTacToeNode(rootBoard, root.getCurrentPlayer(), root.getOtherPlayer());
                 newNode.getBoard().setPlayer(pos, newNode.getCurrentPlayer());
                 root.add(makeTree(newNode, depth - 1));
             }
