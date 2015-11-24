@@ -2,6 +2,8 @@ package ai.minimax;
 
 import ai.AI;
 import game.Board;
+import game.NoWinnerException;
+import game.WinChecker;
 
 import java.util.Enumeration;
 
@@ -10,7 +12,7 @@ import java.util.Enumeration;
  */
 public class Minimax implements AI {
     private final static String NAME = "Minimax";
-    private static final int MINIMAX_TREE_DEPTH = 1;
+    private static final int MINIMAX_TREE_DEPTH = 9;
 
     private final char aiPlayer;
     private final char opponent;
@@ -77,10 +79,14 @@ public class Minimax implements AI {
         if (depth == 0) return root;
 
         for (int pos = 0; pos < rootBoard.getBoardSize(); pos++) {
-            if (rootBoard.isFree(pos)) {
-                TicTacToeNode newNode = new TicTacToeNode(rootBoard, root.getOtherPlayer(), root.getCurrentPlayer());
-                newNode.getBoard().setPlayer(pos, newNode.getCurrentPlayer());
-                root.add(makeTree(newNode, depth - 1));
+            try {
+                WinChecker.FIND_WINNER(rootBoard);
+            } catch (NoWinnerException e) {
+                if (rootBoard.isFree(pos)) {
+                    TicTacToeNode newNode = new TicTacToeNode(rootBoard, root.getOtherPlayer(), root.getCurrentPlayer());
+                    newNode.getBoard().setPlayer(pos, newNode.getCurrentPlayer());
+                    root.add(makeTree(newNode, depth - 1));
+                }
             }
         }
         return root;
