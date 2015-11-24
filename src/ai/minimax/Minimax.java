@@ -10,12 +10,10 @@ import java.util.Enumeration;
  */
 public class Minimax implements AI {
     private final static String NAME = "Minimax";
-    private static final int MINIMAX_TREE_DEPTH = 8;
+    private static final int MINIMAX_TREE_DEPTH = 1;
 
     private final char aiPlayer;
     private final char opponent;
-    private TicTacToeNode root;
-
 
     private int currentMove;
 
@@ -33,9 +31,9 @@ public class Minimax implements AI {
         Enumeration enumeration = node.children();
         while (enumeration.hasMoreElements()) {
             TicTacToeNode curNode = (TicTacToeNode) enumeration.nextElement();
-            int childScore = alphaBeta(curNode, Integer.MIN_VALUE, Integer.MAX_VALUE, true);
+            int childScore = alphaBeta(curNode, Integer.MIN_VALUE, Integer.MAX_VALUE, true, 1);
 
-            if (bestNode == null || bestScore <= childScore) {
+            if (bestNode == null || bestScore < childScore) {
                 bestNode = curNode;
                 bestScore = childScore;
             }
@@ -45,17 +43,18 @@ public class Minimax implements AI {
         return currentMove;
     }
 
-    private int alphaBeta(TicTacToeNode node, int alpha, int beta, boolean maximizing) {
+    private int alphaBeta(TicTacToeNode node, int alpha, int beta, boolean maximizing, int depth) {
         int bestScore;
         if (!node.children().hasMoreElements()) {
-            bestScore = node.calcScore();
+            bestScore = node.calcScore() / depth;
+            if (!maximizing) bestScore = -bestScore;
         } else if (maximizing) {
             bestScore = alpha;
 
             Enumeration enumeration = node.children();
             while (enumeration.hasMoreElements()) {
                 TicTacToeNode childNode = (TicTacToeNode) enumeration.nextElement();
-                int childScore = alphaBeta(childNode, bestScore, beta, false);
+                int childScore = alphaBeta(childNode, bestScore, beta, false, depth + 1);
                 bestScore = Math.max(bestScore, childScore);
                 if (beta <= bestScore) break;
             }
@@ -64,7 +63,7 @@ public class Minimax implements AI {
 
             Enumeration enumeration = node.children();
             while (enumeration.hasMoreElements()) {
-                int childScore = -alphaBeta((TicTacToeNode) enumeration.nextElement(), alpha, bestScore, true);
+                int childScore = alphaBeta((TicTacToeNode) enumeration.nextElement(), alpha, bestScore, true, depth + 1);
                 bestScore = Math.min(bestScore, childScore);
                 if (bestScore <= alpha) break;
             }

@@ -60,28 +60,28 @@ public class TicTacToeNode extends DefaultMutableTreeNode {
         int score = 0;
 
         try {
-            if (WinChecker.FIND_WINNER(board) == currentPlayer) score = Integer.MIN_VALUE;
-            else if (WinChecker.FIND_WINNER(board) == otherPlayer) score = Integer.MAX_VALUE;
+            if (WinChecker.FIND_WINNER(board) == currentPlayer) score = Integer.MAX_VALUE;
+            else if (WinChecker.FIND_WINNER(board) == otherPlayer) score = Integer.MIN_VALUE;
         } catch (NoWinnerException e) {
             char[][] boardArray = board.getBoardArray();
             int maxScore = 0;
             int minScore = 0;
 
             for (int[][] winState : winStates) {
-                boolean maxwin = true;
-                boolean minwin = true;
+                int curPoints = 0;
+                int othPoints = 0;
 
                 for (int y = 0; y < winState.length; y++) {
                     for (int x = 0; x < winState[y].length; x++) {
                         if (winState[y][x] == 1) {
-                            if (boardArray[y][x] == otherPlayer) maxwin = false;
-                            if (boardArray[y][x] == currentPlayer) minwin = false;
+                            if (boardArray[y][x] == currentPlayer) curPoints++;
+                            if (boardArray[y][x] == otherPlayer) othPoints++;
                         }
                     }
                 }
 
-                maxScore += maxwin ? 1 : 0;
-                minScore -= minwin ? 1 : 0;
+                maxScore += othPoints == 0 ? 10 * curPoints : 0;
+                minScore -= curPoints == 0 ? 10 * othPoints : 0;
             }
             score = (maxScore + minScore);
         }
@@ -110,6 +110,6 @@ public class TicTacToeNode extends DefaultMutableTreeNode {
 
     @Override
     public String toString() {
-        return getBoard() + "\nscore: " + getScore();
+        return getBoard() + "\nscore: " + calcScore();
     }
 }
