@@ -10,7 +10,7 @@ import java.util.Enumeration;
  */
 public class Minimax implements AI {
     private final static String NAME = "Minimax";
-    private static final int MINIMAX_TREE_DEPTH = 1;
+    private static final int MINIMAX_TREE_DEPTH = 8;
 
     private final char aiPlayer;
     private final char opponent;
@@ -64,7 +64,7 @@ public class Minimax implements AI {
 
             Enumeration enumeration = node.children();
             while (enumeration.hasMoreElements()) {
-                int childScore = alphaBeta((TicTacToeNode) enumeration.nextElement(), alpha, bestScore, true);
+                int childScore = -alphaBeta((TicTacToeNode) enumeration.nextElement(), alpha, bestScore, true);
                 bestScore = Math.min(bestScore, childScore);
                 if (bestScore <= alpha) break;
             }
@@ -79,7 +79,7 @@ public class Minimax implements AI {
 
         for (int pos = 0; pos < rootBoard.getBoardSize(); pos++) {
             if (rootBoard.isFree(pos)) {
-                TicTacToeNode newNode = new TicTacToeNode(rootBoard, root.getCurrentPlayer(), root.getOtherPlayer());
+                TicTacToeNode newNode = new TicTacToeNode(rootBoard, root.getOtherPlayer(), root.getCurrentPlayer());
                 newNode.getBoard().setPlayer(pos, newNode.getCurrentPlayer());
                 root.add(makeTree(newNode, depth - 1));
             }
