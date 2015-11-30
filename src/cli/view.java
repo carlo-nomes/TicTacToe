@@ -11,20 +11,22 @@ import java.util.Scanner;
  * Created by Carlo on 13/10/2015.
  */
 public class view {
-    private static final char AIPLAYER = 'X';
+    private static final char AIPLAYER = 'O';
 
     public static void main(String[] args) {
         char playerX = 'X';
         char playerO = 'O';
         Game game;
-        AI ai;
+        AI ai1;
+        AI ai2;
 
         boolean cont = true;
         Scanner scanner = new Scanner(System.in);
         while (cont) {
             try {
                 game = new Game(playerX, playerO);
-                ai = new Minimax(playerX, playerO);
+                ai1 = new Minimax(playerX, playerO);
+                ai2 = new Minimax(playerO, playerX);
             } catch (GameException e) {
                 System.out.println(e.getMessage());
                 break;
@@ -35,9 +37,11 @@ public class view {
                 try {
                     int pos;
                     if (game.getCurrentPlayer() == AIPLAYER) {
-                        pos = ai.move(game.getBoard());
+                        pos = ai1.move(game.getBoard());
                         System.out.println(pos);
                     } else {
+//                        pos = ai2.move(game.getBoard());
+//                        System.out.println(pos);
                         pos = Integer.parseInt(scanner.next());
                     }
                     game.makeMove(pos);

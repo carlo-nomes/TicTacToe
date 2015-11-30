@@ -48,6 +48,7 @@ public class TicTacToeNode extends DefaultMutableTreeNode {
     private Board board;
     private char currentPlayer;
     private char otherPlayer;
+    private boolean best;
 
     public TicTacToeNode(Board board, char currentPlayer, char otherPlayer) {
         super();
@@ -108,8 +109,17 @@ public class TicTacToeNode extends DefaultMutableTreeNode {
         return otherPlayer;
     }
 
+    public void setBest(boolean best) {
+        this.best = best;
+    }
+
+    public boolean isBest() {
+        return best;
+    }
+
     @Override
     public String toString() {
         return getBoard() + "\nscore: " + calcScore();
     }
+
 }
