@@ -9,9 +9,4 @@ public interface AI {
 
     int move(Board board);
 
-    int getTimeSpend();
-
-    String getName();
-
-    char getPlayer();
 }

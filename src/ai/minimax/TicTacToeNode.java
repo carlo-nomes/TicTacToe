@@ -1,7 +1,8 @@
 package ai.minimax;
 
 import game.Board;
-import game.NoWinnerException;
+import game.GameState;
+import game.States;
 import game.WinChecker;
 
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -47,45 +48,49 @@ public class TicTacToeNode extends DefaultMutableTreeNode {
     private double score;
     private Board board;
     private char currentPlayer;
-    private char otherPlayer;
+    private char opponentPlayer;
 
-    public TicTacToeNode(Board board, char currentPlayer, char otherPlayer) {
+    public TicTacToeNode(Board board, char currentPlayer, char opponentPlayer) {
         super();
         this.board = board.clone();
         this.currentPlayer = currentPlayer;
-        this.otherPlayer = otherPlayer;
+        this.opponentPlayer = opponentPlayer;
     }
 
-    public int calcScore() {
-        int score = 0;
-
-        try {
-            if (WinChecker.FIND_WINNER(board) == currentPlayer) score = Integer.MAX_VALUE;
-            else if (WinChecker.FIND_WINNER(board) == otherPlayer) score = Integer.MIN_VALUE;
-        } catch (NoWinnerException e) {
+    public double calcScore() {
+        double boardScore = 0;
+        GameState gameState = WinChecker.FIND_WINNER(board);
+        if (gameState.getState() == States.NORMAL) {
             char[][] boardArray = board.getBoardArray();
-            int maxScore = 0;
-            int minScore = 0;
+            int positiveScore = 0;
+            int negativeScore = 0;
 
             for (int[][] winState : winStates) {
                 int curPoints = 0;
-                int othPoints = 0;
+                int oppPoints = 0;
 
                 for (int y = 0; y < winState.length; y++) {
                     for (int x = 0; x < winState[y].length; x++) {
                         if (winState[y][x] == 1) {
                             if (boardArray[y][x] == currentPlayer) curPoints++;
-                            if (boardArray[y][x] == otherPlayer) othPoints++;
+                            if (boardArray[y][x] == opponentPlayer) oppPoints++;
                         }
                     }
                 }
 
-                maxScore += othPoints == 0 ? 10 * curPoints : 0;
-                minScore -= curPoints == 0 ? 10 * othPoints : 0;
+                positiveScore += oppPoints == 0 ? Math.pow(10, curPoints) : 0;
+                //Er wordt vanuit gegaan dat het score word berekend na de zet van de huidige speler,
+                //dus het score van de opponent weegt zwaarder door
+                negativeScore -= curPoints == 0 ? Math.pow(10, oppPoints + 1) : 0;
             }
-            score = (maxScore + minScore);
+            boardScore = (positiveScore + negativeScore);
+            //returns largest/lowest possible value if currentPlayer wins/loses
+            //cannot use Infinity because it needs to be divided later
+        } else if (gameState.getState() == States.WON) {
+            return gameState.getWinner() == currentPlayer ? Double.MAX_VALUE : Double.MIN_VALUE;
         }
-        return score;
+
+        return boardScore;
     }
 
     public void setScore(double score) {
@@ -104,12 +109,14 @@ public class TicTacToeNode extends DefaultMutableTreeNode {
         return currentPlayer;
     }
 
-    public char getOtherPlayer() {
-        return otherPlayer;
+    public char getOpponentPlayer() {
+        return opponentPlayer;
     }
 
     @Override
     public String toString() {
-        return getBoard() + "\nscore: " + calcScore();
+        return getBoard()
+                + "\nscore: " + calcScore()
+                + "\nminimax: " + score;
     }
 }

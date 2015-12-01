@@ -19,5 +19,9 @@ public class TicTacToeNodeTest {
         System.out.println(ticTacToeNode);
         ticTacToeNode.getBoard().setPlayer(7, 'O');
         System.out.println(ticTacToeNode);
+        ticTacToeNode.getBoard().setPlayer(8, 'X');
+        System.out.println(ticTacToeNode);
+        ticTacToeNode.getBoard().setPlayer(1, 'O');
+        System.out.println(ticTacToeNode);
     }
 }

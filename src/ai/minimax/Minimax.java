@@ -1,23 +1,24 @@
 package ai.minimax;
 
 import ai.AI;
-import game.Board;
-import game.NoWinnerException;
-import game.WinChecker;
-
-import java.util.Enumeration;
+import game.*;
 
 /**
  * Created by Carlo on 17/10/2015.
  */
 public class Minimax implements AI {
-    private final static String NAME = "Minimax";
-    private static final int MINIMAX_TREE_DEPTH = 9;
+    private int maxTreeDepth = 9;
 
     private final char aiPlayer;
     private final char opponent;
 
-    private int currentMove;
+    private TicTacToeNode nodeToChose;
+
+    public Minimax(char aiPlayer, char opponent, int maxTreeDepth) {
+        this.aiPlayer = aiPlayer;
+        this.opponent = opponent;
+        this.maxTreeDepth = maxTreeDepth;
+    }
 
     public Minimax(char aiPlayer, char opponent) {
         this.aiPlayer = aiPlayer;
@@ -26,84 +27,89 @@ public class Minimax implements AI {
 
     @Override
     public int move(Board board) {
-        TicTacToeNode node = makeTree(new TicTacToeNode(board, aiPlayer, opponent), MINIMAX_TREE_DEPTH);
+        TicTacToeNode node = new TicTacToeNode(board, opponent, aiPlayer);
+        double score = alphaBeta(node, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, true, 0);
 
-        int bestScore = 0;
+        return Board.boardsToMove(board.getBoardArray(), nodeToChose.getBoard().getBoardArray());
+    }
+
+    private double alphaBeta(TicTacToeNode node, double alpha, double beta, boolean maximizing, int depth) {
+        Board board = node.getBoard();
+        double bestScore;
         TicTacToeNode bestNode = null;
-        Enumeration enumeration = node.children();
-        while (enumeration.hasMoreElements()) {
-            TicTacToeNode curNode = (TicTacToeNode) enumeration.nextElement();
-            int childScore = alphaBeta(curNode, Integer.MIN_VALUE, Integer.MAX_VALUE, true, 1);
 
-            if (bestNode == null || bestScore < childScore) {
-                bestNode = curNode;
-                bestScore = childScore;
-            }
-        }
-
-        currentMove = Board.boardsToMove(board.getBoardArray(), bestNode.getBoard().getBoardArray());
-        return currentMove;
-    }
-
-    private int alphaBeta(TicTacToeNode node, int alpha, int beta, boolean maximizing, int depth) {
-        int bestScore;
-        if (!node.children().hasMoreElements()) {
+        //Stop searching
+        if (depth == maxTreeDepth || WinChecker.FIND_WINNER((node.getBoard())).getState() != States.NORMAL) {
             bestScore = node.calcScore() / depth;
-            if (!maximizing) bestScore = -bestScore;
-        } else if (maximizing) {
-            bestScore = alpha;
-
-            Enumeration enumeration = node.children();
-            while (enumeration.hasMoreElements()) {
-                TicTacToeNode childNode = (TicTacToeNode) enumeration.nextElement();
-                int childScore = alphaBeta(childNode, bestScore, beta, false, depth + 1);
-                bestScore = Math.max(bestScore, childScore);
-                if (beta <= bestScore) break;
-            }
-        } else {
-            bestScore = beta;
-
-            Enumeration enumeration = node.children();
-            while (enumeration.hasMoreElements()) {
-                int childScore = alphaBeta((TicTacToeNode) enumeration.nextElement(), alpha, bestScore, true, depth + 1);
-                bestScore = Math.min(bestScore, childScore);
-                if (bestScore <= alpha) break;
-            }
+            if (maximizing) bestScore = -bestScore;
         }
-        node.setScore(bestScore);
-        return bestScore;
-    }
+        //MAX
+        else {
+            if (maximizing) {
+                bestScore = alpha;
 
-    private TicTacToeNode makeTree(TicTacToeNode root, int depth) {
-        Board rootBoard = root.getBoard();
-        if (depth == 0) return root;
+                for (int pos = 0; pos < board.getBoardSize(); pos++) {
+                    if (board.isFree(pos)) {
+                        //Child maken
+                        TicTacToeNode childNode = new TicTacToeNode(board, node.getOpponentPlayer(), node.getCurrentPlayer());
+                        childNode.getBoard().setPlayer(pos, childNode.getCurrentPlayer());
+                        node.add(childNode);
 
-        for (int pos = 0; pos < rootBoard.getBoardSize(); pos++) {
-            try {
-                WinChecker.FIND_WINNER(rootBoard);
-            } catch (NoWinnerException e) {
-                if (rootBoard.isFree(pos)) {
-                    TicTacToeNode newNode = new TicTacToeNode(rootBoard, root.getOtherPlayer(), root.getCurrentPlayer());
-                    newNode.getBoard().setPlayer(pos, newNode.getCurrentPlayer());
-                    root.add(makeTree(newNode, depth - 1));
+                        //Berekening doen
+                        double childScore = alphaBeta(childNode, bestScore, beta, false, depth + 1);
+
+                        if (childScore > bestScore) {
+                            //Vervang bestNode door childNode als deze een hoger score teruggeeft
+                            bestScore = childScore;
+                            bestNode = childNode;
+                        } else if (childScore != alpha && childScore == bestScore) {
+                            if (childNode.calcScore() > bestNode.calcScore()) {
+                                //Als ze hetzelfde score hebben bereken je de heuristic value van de twee
+                                bestScore = childScore;
+                                bestNode = childNode;
+                            }
+                        }
+
+                        //Stoppen indien score hoger is als beta
+                        if (bestScore >= beta) return bestScore;
+                    }
+                }
+            }
+            //MIN
+            else {
+                bestScore = beta;
+
+                for (int pos = 0; pos < board.getBoardSize(); pos++) {
+                    if (board.isFree(pos)) {
+                        //child maken
+                        TicTacToeNode childNode = new TicTacToeNode(board, node.getOpponentPlayer(), node.getCurrentPlayer());
+                        childNode.getBoard().setPlayer(pos, childNode.getCurrentPlayer());
+                        node.add(childNode);
+
+                        //Berekening doen
+                        double childScore = alphaBeta(childNode, alpha, bestScore, true, depth + 1);
+
+                        if (childScore < bestScore) {
+                            //Vervang bestNode door childNode als deze een lager score teruggeeft
+                            bestScore = childScore;
+                            bestNode = childNode;
+                        } else if (childScore != beta && childScore == bestScore) {
+                            if (childNode.calcScore() > bestNode.calcScore()) {
+                                //Als ze hetzelfde score hebben bereken je de heuristic value van de twee
+                                bestScore = childScore;
+                                bestNode = childNode;
+                            }
+                        }
+                    }
+                    node.setScore(bestScore);
+
+                    //Stoppen indien score lager is als alfa
+                    if (bestScore <= alpha) return bestScore;
                 }
             }
         }
-        return root;
-    }
-
-    @Override
-    public int getTimeSpend() {
-        return 0;
-    }
-
-    @Override
-    public String getName() {
-        return NAME;
-    }
-
-    @Override
-    public char getPlayer() {
-        return 0;
+        if (depth == 0) nodeToChose = bestNode;
+        node.setScore(bestScore);
+        return bestScore;
     }
 }
