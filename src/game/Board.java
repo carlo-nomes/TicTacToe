@@ -37,14 +37,25 @@ public class Board {
         return boardArray;
     }
 
-    private int yxToPos(int y, int x) {
+    //vergelijkt twee borden om de gemaakte zet te vinden.
+    public static int boardsToMove(char[][] first, char[][] second) {
+        for (int y = 0; y < first.length; y++) {
+            for (int x = 0; x < first[y].length; x++) {
+                if (first[y][x] != second[y][x])
+                    return yxToPos(y, x);
+            }
+        }
+        return -1;
+    }
+
+    public static int yxToPos(int y, int x) {
         return (y * X) + x;
     }
 
-    private int[] posToYX(int pos) {
+    public static int[] posToYX(int pos) {
         int[] yx = new int[2];
-        yx[0] = pos / boardArray.length;
-        yx[1] = pos % boardArray.length;
+        yx[0] = pos / Y;
+        yx[1] = pos % Y;
         return yx;
     }
 

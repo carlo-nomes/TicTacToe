@@ -4,31 +4,33 @@ package game;
  * Created by Carlo on 22/10/2015.
  */
 public class WinChecker {
-    public static char FIND_WINNER(Board board) throws NoWinnerException {
+
+
+    //returns [POSSIBLE_STATES, winner]
+    public static GameState FIND_WINNER(Board board) {
         char[][] boardArray = board.getBoardArray();
 
         //Check horizontal
         for (int y = 0; y < boardArray.length; y++) {
-            if (boardArray[y][0] != '\u0000' && boardArray[y][0] == boardArray[y][1] && boardArray[y][1] == boardArray[y][2]) {
-                return boardArray[y][0];
-            }
+            if (boardArray[y][0] != '\u0000' && boardArray[y][0] == boardArray[y][1] && boardArray[y][1] == boardArray[y][2])
+                return new GameState(States.WON, boardArray[y][0]);
         }
 
         //Check vertical
         for (int x = 0; x < boardArray[0].length; x++) {
             if (boardArray[0][x] != '\u0000' && boardArray[0][x] == boardArray[1][x] && boardArray[1][x] == boardArray[2][x]) {
-                return boardArray[0][x];
+                return new GameState(States.WON, boardArray[0][x]);
             }
         }
 
         //Check diagonal left->right
         if (boardArray[0][0] != '\u0000' && boardArray[0][0] == boardArray[1][1] && boardArray[1][1] == boardArray[2][2]) {
-            return boardArray[0][0];
+            return new GameState(States.WON, boardArray[0][0]);
         }
 
         //Check diagonal right->left
         if (boardArray[0][2] != '\u0000' && boardArray[0][2] == boardArray[1][1] && boardArray[1][1] == boardArray[2][0]) {
-            return boardArray[0][2];
+            return new GameState(States.WON, boardArray[0][2]);
         }
 
         //Check for tie
@@ -39,9 +41,9 @@ public class WinChecker {
                     emptySpot = true;
         }
         if (!emptySpot) {
-            return '\u0000';
+            return new GameState(States.TIE, '\u0000');
         } else {
-            throw new NoWinnerException("The game has not yet ended");
+            return new GameState(States.NORMAL, '\u0000');
         }
 
     }
