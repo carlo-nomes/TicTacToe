@@ -7,7 +7,7 @@ import game.Board;
  * Date: 17/11/2015<br/>
  * Time: 12:39<br/>
  */
-class TicTacToeNodeTest {
+public class TicTacToeNodeTest {
     public static void main(String[] args) {
         Board board = new Board();
         //TicTacToeNode ticTacToeNode = new TicTacToeNode(board, 'X', 'O');
