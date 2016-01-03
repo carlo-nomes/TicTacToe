@@ -1,12 +1,15 @@
 package game;
 
 /**
- * Created by Nicolas on 22-9-2015.
+ * Created with IntelliJ IDEA.<br/>
+ * User: Nicolas<br/>
+ * Date: 22-9-2015<br/>
+ * Time: 12:39<br/>
  */
 public class Board {
     private static final int Y = 3;
     private static final int X = 3;
-    private char[][] boardArray;
+    private final char[][] boardArray;
 
     public Board() {
         boardArray = new char[Y][X];
@@ -16,10 +19,7 @@ public class Board {
         int y = posToYX(pos)[0];
         int x = posToYX(pos)[1];
 
-        if (boardArray[y][x] != '\u0000')
-            return false;
-        else
-            return true;
+        return boardArray[y][x] == '\u0000';
     }
 
     public int getBoardSize() {
@@ -88,6 +88,7 @@ public class Board {
         } else return false;
     }
 
+    @Override
     public Board clone() {
         Board board = new Board();
 

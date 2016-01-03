@@ -1,7 +1,10 @@
 package game;
 
 /**
- * Created by Carlo on 22/10/2015.
+ * Created with IntelliJ IDEA.<br/>
+ * User: Carlo<br/>
+ * Date: 22/10/2015<br/>
+ * Time: 12:39<br/>
  */
 public class WinChecker {
 

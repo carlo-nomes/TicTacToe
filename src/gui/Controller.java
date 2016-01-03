@@ -10,12 +10,10 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
-import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.scene.text.TextAlignment;
-import javafx.stage.Screen;
 import javafx.stage.Stage;
 
 import java.net.URL;
@@ -24,7 +22,10 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 
 /**
- * Created by Carlo on 25/12/2015.
+ * Created with IntelliJ IDEA.<br/>
+ * User: Carlo<br/>
+ * Date: 25/12/2015<br/>
+ * Time: 12:39<br/>
  */
 public class Controller implements Initializable {
     private static final char DEF_PLAYER_1 = 'X';

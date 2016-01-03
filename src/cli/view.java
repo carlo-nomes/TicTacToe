@@ -9,11 +9,15 @@ import game.States;
 import java.util.Scanner;
 
 /**
- * Created by Carlo on 13/10/2015.
+ * Created with IntelliJ IDEA.<br/>
+ * User: Carlo<br/>
+ * Date: 13/10/2015<br/>
+ * Time: 12:39<br/>
  */
-public class view {
+class view {
     private static final char AI_PLAYER_1 = 'O';
     private static final char AI_PLAYER_2 = 'X';
+
 
     public static void main(String[] args) {
         char playerX = 'X';

@@ -1,12 +1,15 @@
 package game;
 
 /**
- * Created by Carlo on 09/10/2015.
+ * Created with IntelliJ IDEA.<br/>
+ * User: Carlo<br/>
+ * Date: 09/10/2015<br/>
+ * Time: 12:39<br/>
  */
 public class Game {
     private final char player1;
     private final char player2;
-    private Board board;
+    private final Board board;
     private char currentPlayer;
 
     private GameState gameState;

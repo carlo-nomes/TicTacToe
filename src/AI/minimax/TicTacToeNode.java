@@ -8,7 +8,10 @@ import game.WinChecker;
 import javax.swing.tree.DefaultMutableTreeNode;
 
 /**
- * Created by Carlo on 23/10/2015.
+ * Created with IntelliJ IDEA.<br/>
+ * User: Carlo<br/>
+ * Date: 23/10/2015<br/>
+ * Time: 12:39<br/>
  */
 public class TicTacToeNode extends DefaultMutableTreeNode {
     private final static int[][][] winStates = {{
@@ -46,9 +49,9 @@ public class TicTacToeNode extends DefaultMutableTreeNode {
     }};
 
     private double score;
-    private Board board;
-    private char currentPlayer;
-    private char opponentPlayer;
+    private final Board board;
+    private final char currentPlayer;
+    private final char opponentPlayer;
     private boolean chosen;
 
     private TicTacToeNode bestNode;
@@ -129,8 +132,8 @@ public class TicTacToeNode extends DefaultMutableTreeNode {
         return chosen;
     }
 
-    public void setChosen(boolean chosen) {
-        this.chosen = chosen;
+    public void setChosen() {
+        this.chosen = true;
     }
 
     @Override

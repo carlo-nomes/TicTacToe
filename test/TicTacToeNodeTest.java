@@ -2,9 +2,12 @@ import ai.minimax.TicTacToeNode;
 import game.Board;
 
 /**
- * Created by Carlo on 17/11/2015.
+ * Created with IntelliJ IDEA.<br/>
+ * User: Carlo<br/>
+ * Date: 17/11/2015<br/>
+ * Time: 12:39<br/>
  */
-public class TicTacToeNodeTest {
+class TicTacToeNodeTest {
     public static void main(String[] args) {
         Board board = new Board();
         //TicTacToeNode ticTacToeNode = new TicTacToeNode(board, 'X', 'O');

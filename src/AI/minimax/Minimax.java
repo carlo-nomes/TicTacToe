@@ -4,10 +4,13 @@ import ai.AI;
 import game.*;
 
 /**
- * Created by Carlo on 17/10/2015.
+ * Created with IntelliJ IDEA.<br/>
+ * User: Carlo<br/>
+ * Date: 17/10/2015<br/>
+ * Time: 12:39<br/>
  */
 public class Minimax implements AI {
-    private int maxTreeDepth;
+    private final int maxTreeDepth;
 
     private final char aiPlayer;
     private final char opponent;
@@ -28,7 +31,7 @@ public class Minimax implements AI {
 
         TicTacToeNode chosenNode = node;
         while (chosenNode != null) {
-            chosenNode.setChosen(true);
+            chosenNode.setChosen();
             chosenNode = chosenNode.getBestNode();
         }
 

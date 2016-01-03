@@ -3,9 +3,12 @@ package gui;
 import javafx.scene.control.Button;
 
 /**
- * Created by Carlo on 25/12/2015.
+ * Created with IntelliJ IDEA.<br/>
+ * User: Carlo<br/>
+ * Date: 25/12/2015<br/>
+ * Time: 12:39<br/>
  */
-public class TicTacToeButton extends Button {
+class TicTacToeButton extends Button {
     private final int pos;
     private char value;
 

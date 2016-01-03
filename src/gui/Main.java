@@ -1,5 +1,8 @@
-package gui;/**
- * Created by Carlo on 25/12/2015.
+package gui; /**
+ * Created with IntelliJ IDEA.<br/>
+ * User: Carlo<br/>
+ * Date: 25/12/2015<br/>
+ * Time: 12:39<br/>
  */
 
 import javafx.application.Application;
@@ -10,7 +13,7 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 
-public class Main extends Application {
+class Main extends Application {
 
     public static void main(String[] args) {
         launch(args);
